@@ -68,22 +68,9 @@ h1 {
     /* Para usar unidades cqw y escalar el texto */
 }
 
-/* For wider containers (>= 768px), show horizontal */
-@container wrapper (min-width: 768px) {
-    .template-box.horizontal {
-        display: block;
-        width: min(100cqw, 100cqh * (768 / 320));
-        aspect-ratio: 768 / 320;
-    }
-}
-
-/* For narrower containers (< 768px), show vertical */
-@container wrapper (max-width: 767px) {
-    .template-box.vertical {
-        display: block;
-        width: min(100cqw, 100cqh * (600 / 810));
-        aspect-ratio: 600 / 810;
-    }
+/* Template sizing — controlled entirely by JS */
+.template-box.active-template {
+    display: block;
 }
 
 /* Horizontal Template Specifics */
@@ -285,6 +272,51 @@ h1 {
                 setTimeout(() => { loadingOverlay.style.display = 'none'; }, 500);
             }
         }, 10000);
+
+        // ─── SELECCIÓN Y ESCALADO DE PLANTILLA ───────────────────────────────
+        const horBox = document.querySelector('.template-box.horizontal');
+        const verBox = document.querySelector('.template-box.vertical');
+
+        function applyTemplate() {
+            const W = window.innerWidth;
+            const H = window.innerHeight;
+
+            // Decidir qué plantilla usar basado en la relación de aspecto real de la ventana
+            const useVertical = H > W; // si es más alto que ancho → vertical
+
+            if (useVertical) {
+                // Mostrar plantilla VERTICAL (600×810)
+                const ratio = 600 / 810;
+                let w = W;
+                let h = w / ratio;
+                if (h > H) { h = H; w = h * ratio; }
+
+                horBox.classList.remove('active-template');
+                horBox.style.width = '';
+                horBox.style.height = '';
+
+                verBox.classList.add('active-template');
+                verBox.style.width  = w + 'px';
+                verBox.style.height = h + 'px';
+            } else {
+                // Mostrar plantilla HORIZONTAL (768×320)
+                const ratio = 768 / 320;
+                let w = W;
+                let h = w / ratio;
+                if (h > H) { h = H; w = h * ratio; }
+
+                verBox.classList.remove('active-template');
+                verBox.style.width = '';
+                verBox.style.height = '';
+
+                horBox.classList.add('active-template');
+                horBox.style.width  = w + 'px';
+                horBox.style.height = h + 'px';
+            }
+        }
+
+        applyTemplate();
+        window.addEventListener('resize', applyTemplate);
     </script>
     <script>
 class MatchDisplayManager {
