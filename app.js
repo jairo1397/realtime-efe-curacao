@@ -46,12 +46,23 @@ class MatchDisplayManager {
             
             if (data && data.partidos && data.partidos.length > 0) {
                 const partido = data.partidos[0];
-                const local = partido.local;
-                const visitante = partido.visitante;
+                let local = partido.local;
+                let visitante = partido.visitante;
                 const marcador = partido.marcador;
 
-                const nuevoHome = parseInt(marcador.local) || 0;
-                const nuevoAway = parseInt(marcador.visitante) || 0;
+                let nuevoHome = parseInt(marcador.local) || 0;
+                let nuevoAway = parseInt(marcador.visitante) || 0;
+
+                // Siempre mostrar a Ecuador primero (como local)
+                if (visitante && (visitante.codigo_iso === 'ECU' || visitante.nombre.toUpperCase().includes('ECUADOR'))) {
+                    const tempTeam = local;
+                    local = visitante;
+                    visitante = tempTeam;
+
+                    const tempScore = nuevoHome;
+                    nuevoHome = nuevoAway;
+                    nuevoAway = tempScore;
+                }
 
                 const savedHomeStr = localStorage.getItem(`alac_home_${this.fixtureId}`);
                 const savedAwayStr = localStorage.getItem(`alac_away_${this.fixtureId}`);
@@ -198,8 +209,16 @@ class MatchDisplayManager {
                 const partido = data.partidos[0];
                 const marcador = partido.marcador;
                 
-                const nuevoHome = parseInt(marcador.local) || 0;
-                const nuevoAway = parseInt(marcador.visitante) || 0;
+                let nuevoHome = parseInt(marcador.local) || 0;
+                let nuevoAway = parseInt(marcador.visitante) || 0;
+
+                // Siempre mostrar a Ecuador primero (como local)
+                const visitante = partido.visitante;
+                if (visitante && (visitante.codigo_iso === 'ECU' || visitante.nombre.toUpperCase().includes('ECUADOR'))) {
+                    const tempScore = nuevoHome;
+                    nuevoHome = nuevoAway;
+                    nuevoAway = tempScore;
+                }
 
                 if (nuevoHome > this.currentHomeScore || nuevoAway > this.currentAwayScore) {
                     const elapsed = Date.now() - this.pageLoadTime;
