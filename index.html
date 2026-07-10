@@ -4,8 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados de Partido - Netlife</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
     <style>
+@font-face {
+    font-family: 'SelectionNameFont';
+    src: url('assets/fonts/FUENTE NOMBRE DE LAS SELECCIONES/poppins.extrabold.ttf') format('truetype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'ScoreFont';
+    src: url('assets/fonts/FUENTE SCORE/poppins.semibold.ttf') format('truetype');
+    font-weight: 600;
+    font-style: normal;
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -24,16 +37,14 @@
 }
 
 html, body {
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'SelectionNameFont', sans-serif;
     background-color: #1a1a1a;
     color: #fff;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     overflow: hidden;
-    /* Evita barras de desplazamiento */
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    margin: 0;
+    padding: 0;
 }
 
 h1 {
@@ -41,21 +52,15 @@ h1 {
     /* Ocultamos el título para que la plantilla tome toda la pantalla */
 }
 
-.templates-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 100%;
-    container-type: size;
-    container-name: wrapper;
-}
 
 .bg-img {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
+    min-width: 100%;
+    min-height: 100%;
 }
 
 /* Default state: hide both templates */
@@ -64,6 +69,8 @@ h1 {
     position: relative;
     overflow: hidden;
     background-color: #000;
+    width: 100vw !important;
+    height: 100vh !important;
 }
 
 /* Template sizing — controlled entirely by JS */
@@ -71,119 +78,113 @@ h1 {
     display: block;
 }
 
-/* Horizontal Template Specifics */
-/* La plantilla tiene 768x320 px, relacion 2.4:1. Si el alto es 100vh, el ancho seria 240vh. */
-/* 1cqw (del ancho 768) equivale aprox a: (1/768) * 100vh * 2.4 = 0.31vh */
+/* Layout tipo overlay */
 .template-box.horizontal .scoreboard {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+}
+
+.template-box.horizontal .bg {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.template-box.horizontal .team-left {
     position: absolute;
-    top: 59%;
-    left: 78.3%;
-    transform: translate(-50%, -50%) scale(0.7);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 92.4vh;
-    border-radius: 0.8vh;
+    left: 55%;
+    top: 9%;
+    width: 20%;
+    height: 75%;
+    transform: translateX(-50%);
 }
 
-.template-box.horizontal .team {
-display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.31vh;
+.template-box.horizontal .team-left .country {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    font-size: clamp(1.2rem, 2.3vw, 3rem);
+    font-weight: 800;
+    color: var(--country-color, #fff);
+    font-family: 'SelectionNameFont', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
-.template-box.horizontal .team img {
-    border-radius: 50%;
-    width: 23.6vh;
-    height: 21.6vh;
-    border: 1.12vh solid #ff4500;
-    object-fit: cover;
-    background-color: #fff;
+.template-box.horizontal .team-left .flag {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 105%;
+    height: auto;
+    max-height: 36%;
+    object-fit: contain;
 }
 
-.template-box.horizontal .team-name {
-    font-family: 'Impact', sans-serif;
-    font-size: 9.1vh;
-    font-style: italic;
-    color: #fff;
-    -webkit-text-stroke: 0.3vh #ff4500;
-    text-shadow: 0.06vh 0.06vh 0 #000, 0.09vh 0.09vh 0.15vh rgba(0, 0, 0, 0.8);
-    letter-spacing: 1px;
+.template-box.horizontal .team-left .score {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(12.5rem, 10vw, 13.5rem);
+    font-weight: 800;
+    color: var(--score-color, #fff);
+    line-height: 1;
+    font-family: 'ScoreFont', sans-serif;
 }
 
-.template-box.horizontal .score {
-font-family: 'Impact', sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 1.62vh;
-    font-size: 17.8vh;
-    color: #fff;
-    -webkit-text-stroke: 0.3vh #ff4500;
-    text-shadow: 0.09vh 0.09vh 0 #000, 0.15vh 0.15vh 0.25vh rgba(0, 0, 0, 0.8);
-    margin-bottom: 4vh;
-    transform: scaleY(1.2);
+.template-box.horizontal .team-right {
+    position: absolute;
+    left: 81%;
+    top: 9%;
+    width: 20%;
+    height: 75%;
+    transform: translateX(-50%);
 }
 
-/* Vertical Template Specifics */
-/* La plantilla tiene 600x810 px, relacion 0.74:1. Si el alto es 100vh, el ancho seria 74vh. */
-/* 1cqw (del ancho 600) equivale aprox a: (1/600)*74vh = 0.123vh */
-/* Pero dado que usamos scale(0.5) en el scoreboard, multiplicamos los tamaños por 2 para compensar */
-.template-box.vertical .scoreboard {
-position: absolute;
-    top: 30%;
-    left: 68.5%;
-    transform: translate(-50%, -50%) scale(0.5);
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 5.1vh;
-    width: 85.4vh;
-    border-radius: 4vh;
+.template-box.horizontal .team-right .country {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    text-align: center;
+    font-size: clamp(1.2rem, 2.3vw, 3rem);
+    font-weight: 800;
+    color: var(--country-color, #fff);
+    font-family: 'SelectionNameFont', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
 }
 
-.template-box.vertical .team {
-display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2.1vh;
+.template-box.horizontal .team-right .flag {
+    position: absolute;
+    top: 12%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 105%;
+    height: auto;
+    max-height: 36%;
+    object-fit: contain;
 }
 
-.template-box.vertical .team img {
-    border-radius: 50%;
-    width: 14.6vh;
-    height: 13.6vh;
-    border: 0.5vh solid #ff4500;
-    object-fit: cover;
-    background-color: #fff;
-}
-
-.template-box.vertical .team-name {
-    font-family: 'Impact', sans-serif;
-    font-size: 6.4vh;
-    font-style: italic;
-    color: #fff;
-    -webkit-text-stroke: 0.25vh #ff4500;
-    text-shadow: 0.37vh 0.37vh 0 #000, 0.49vh 0.49vh 0.74vh rgba(0, 0, 0, 0.8);
-    letter-spacing: 2px;
-}
-
-.template-box.vertical .score {
-font-family: 'Impact', sans-serif;
-    display: flex;
-    align-items: center;
-    gap: 4vh;
-    font-size: 11.7vh;
-    color: #fff;
-    -webkit-text-stroke: 0.37vh #ff4500;
-    text-shadow: 0.49vh 0.49vh 0 #000, 0.74vh 0.74vh 1.23vh rgba(0, 0, 0, 0.8);
-    margin-bottom: 7vh;
-    transform: scaleY(1.2);
-}
-
-.divider {
-    /* Divider inherits color and stroke from .score */
+.template-box.horizontal .team-right .score {
+    position: absolute;
+    top: 45%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: clamp(12.5rem, 10vw, 13.5rem);
+    font-weight: 800;
+    color: var(--score-color, #fff);
+    line-height: 1;
+    font-family: 'ScoreFont', sans-serif;
 }
 </style>
 </head>
@@ -191,49 +192,23 @@ font-family: 'Impact', sans-serif;
     <div id="loading-overlay"></div>
     <h1>Visualización de Resultados</h1>
     
-    <div class="templates-wrapper">
-        <!-- Plantilla Horizontal -->
-        <div class="template-box horizontal">
-            <img src="assets/HORIZONTAL 768X320 con LEGALES.png" class="bg-img" alt="Horizontal">
-            
-            <div class="scoreboard" id="scoreboard-hor" style="display: none;">
-                <div class="team">
-                    <img id="home-logo-hor" src="" alt="Local">
-                    <div id="home-name-hor" class="team-name"></div>
-                </div>
-                
+    <div class="template-box horizontal active-template">
+        <div class="scoreboard" id="scoreboard-hor" style="display: none;">
+            <img src="assets/OOH-MUNDIAL_la curacao_PLANTILLA.png" class="bg" alt="Plantilla Curazao">
+
+            <div class="team team-left">
+                <div id="home-name-hor" class="country"></div>
+                <img id="home-logo-hor" src="" class="flag" alt="Local">
                 <div class="score">
                     <span id="home-score-hor">-</span>
-                    <span class="divider">-</span>
-                    <span id="away-score-hor">-</span>
-                </div>
-                
-                <div class="team">
-                    <img id="away-logo-hor" src="" alt="Visitante">
-                    <div id="away-name-hor" class="team-name"></div>
                 </div>
             </div>
-        </div>
 
-        <!-- Plantilla Vertical -->
-        <div class="template-box vertical">
-            <img src="assets/VERTICAL 600X810 con LEGALES (1).png" class="bg-img" alt="Vertical">
-            
-            <div class="scoreboard" id="scoreboard-ver" style="display: none;">
-                <div class="team">
-                    <img id="home-logo-ver" src="" alt="Local">
-                    <div id="home-name-ver" class="team-name"></div>
-                </div>
-                
+            <div class="team team-right">
+                <div id="away-name-hor" class="country"></div>
+                <img id="away-logo-hor" src="" class="flag" alt="Visitante">
                 <div class="score">
-                    <span id="home-score-ver">-</span>
-                    <span class="divider">-</span>
-                    <span id="away-score-ver">-</span>
-                </div>
-                
-                <div class="team">
-                    <img id="away-logo-ver" src="" alt="Visitante">
-                    <div id="away-name-ver" class="team-name"></div>
+                    <span id="away-score-hor">-</span>
                 </div>
             </div>
         </div>
@@ -272,46 +247,20 @@ font-family: 'Impact', sans-serif;
             }
         }, 10000);
 
-        // ─── SELECCIÓN Y ESCALADO DE PLANTILLA ───────────────────────────────
+        // ─── ESCALADO DE PLANTILLA HORIZONTAL ───────────────────────────────
         const horBox = document.querySelector('.template-box.horizontal');
-        const verBox = document.querySelector('.template-box.vertical');
 
         function applyTemplate() {
             const W = window.innerWidth;
             const H = window.innerHeight;
+            const ratio = 768 / 320;
+            let w = W;
+            let h = w / ratio;
+            if (h > H) { h = H; w = h * ratio; }
 
-            // Decidir qué plantilla usar basado en la relación de aspecto real de la ventana
-            const useVertical = H > W; // si es más alto que ancho → vertical
-
-            if (useVertical) {
-                // Mostrar plantilla VERTICAL (600×810)
-                const ratio = 600 / 810;
-                let w = W;
-                let h = w / ratio;
-                if (h > H) { h = H; w = h * ratio; }
-
-                horBox.classList.remove('active-template');
-                horBox.style.width = '';
-                horBox.style.height = '';
-
-                verBox.classList.add('active-template');
-                verBox.style.width  = w + 'px';
-                verBox.style.height = h + 'px';
-            } else {
-                // Mostrar plantilla HORIZONTAL (768×320)
-                const ratio = 768 / 320;
-                let w = W;
-                let h = w / ratio;
-                if (h > H) { h = H; w = h * ratio; }
-
-                verBox.classList.remove('active-template');
-                verBox.style.width = '';
-                verBox.style.height = '';
-
-                horBox.classList.add('active-template');
-                horBox.style.width  = w + 'px';
-                horBox.style.height = h + 'px';
-            }
+            horBox.classList.add('active-template');
+            horBox.style.width = w + 'px';
+            horBox.style.height = h + 'px';
         }
 
         applyTemplate();
@@ -323,7 +272,6 @@ class MatchDisplayManager {
         this.apiUrl = options.apiUrl || 'https://alacapipollamundialista.alacoohperu.pe/api/public';
         this.fixtureId = options.fixtureId || 9;
         
-        // DOM Elements for Horizontal
         this.hor = {
             scoreboard: document.getElementById('scoreboard-hor'),
             homeLogo: document.getElementById('home-logo-hor'),
@@ -333,22 +281,42 @@ class MatchDisplayManager {
             awayName: document.getElementById('away-name-hor'),
             awayScore: document.getElementById('away-score-hor')
         };
-        
-        // DOM Elements for Vertical
-        this.ver = {
-            scoreboard: document.getElementById('scoreboard-ver'),
-            homeLogo: document.getElementById('home-logo-ver'),
-            homeName: document.getElementById('home-name-ver'),
-            homeScore: document.getElementById('home-score-ver'),
-            awayLogo: document.getElementById('away-logo-ver'),
-            awayName: document.getElementById('away-name-ver'),
-            awayScore: document.getElementById('away-score-ver')
-        };
 
         this.currentHomeScore = 0;
         this.currentAwayScore = 0;
         this.pageLoadTime = Date.now();
         this.pollInterval = options.pollInterval || 10000; // 10 seconds default
+        this.templateType = options.templateType || 1;
+        this.applyTemplateType();
+    }
+
+    applyTemplateColors() {
+        const root = document.documentElement;
+        if (this.templateType === 2) {
+            root.style.setProperty('--country-color', '#fff');
+            root.style.setProperty('--score-color', '#fff');
+        } else {
+            root.style.setProperty('--country-color', '#000');
+            root.style.setProperty('--score-color', '#000');
+        }
+    }
+
+    getTemplateImageUrl() {
+        return this.templateType === 2
+            ? 'assets/OOH-MUNDIAL_plantilla_tiendas EFE.png'
+            : 'assets/OOH-MUNDIAL_la curacao_PLANTILLA.png';
+    }
+
+    applyTemplateType() {
+        const imageUrl = this.getTemplateImageUrl();
+        const templateName = this.templateType === 2 ? 'Tiendas EFE' : 'Curazao';
+
+        document.querySelectorAll('.bg').forEach((img) => {
+            img.src = imageUrl;
+            img.alt = `Plantilla ${templateName}`;
+        });
+
+        this.applyTemplateColors();
     }
 
     getShortName(name, isoCode) {
@@ -400,17 +368,15 @@ class MatchDisplayManager {
                     this.currentAwayScore = nuevoAway;
                 }
 
-                // Make scoreboards visible
+                // Make scoreboard visible
                 if (this.hor.scoreboard) this.hor.scoreboard.style.display = 'flex';
-                if (this.ver.scoreboard) this.ver.scoreboard.style.display = 'flex';
                 
                 const homeLogoUrl = local.bandera_url || local.bandera || local.logo;
-                const homeName = local.codigo_iso;
+                const homeName = local.nombre || local.nombre_equipo || local.codigo_iso || 'Local';
                 
                 const awayLogoUrl = visitante.bandera_url || visitante.bandera || visitante.logo;
-                const awayName = visitante.codigo_iso;
+                const awayName = visitante.nombre || visitante.nombre_equipo || visitante.codigo_iso || 'Visitante';
 
-                // Update Horizontal
                 if (homeLogoUrl && this.hor.homeLogo) this.hor.homeLogo.src = homeLogoUrl;
                 if (this.hor.homeName) this.hor.homeName.innerText = homeName;
                 if (this.hor.homeScore) this.hor.homeScore.innerText = this.currentHomeScore;
@@ -418,15 +384,6 @@ class MatchDisplayManager {
                 if (awayLogoUrl && this.hor.awayLogo) this.hor.awayLogo.src = awayLogoUrl;
                 if (this.hor.awayName) this.hor.awayName.innerText = awayName;
                 if (this.hor.awayScore) this.hor.awayScore.innerText = this.currentAwayScore;
-
-                // Update Vertical
-                if (homeLogoUrl && this.ver.homeLogo) this.ver.homeLogo.src = homeLogoUrl;
-                if (this.ver.homeName) this.ver.homeName.innerText = homeName;
-                if (this.ver.homeScore) this.ver.homeScore.innerText = this.currentHomeScore;
-                
-                if (awayLogoUrl && this.ver.awayLogo) this.ver.awayLogo.src = awayLogoUrl;
-                if (this.ver.awayName) this.ver.awayName.innerText = awayName;
-                if (this.ver.awayScore) this.ver.awayScore.innerText = this.currentAwayScore;
 
                 localStorage.setItem(`alac_home_${this.fixtureId}`, nuevoHome);
                 localStorage.setItem(`alac_away_${this.fixtureId}`, nuevoAway);
@@ -507,9 +464,6 @@ class MatchDisplayManager {
 
         if (this.hor.homeScore) this.hor.homeScore.innerText = this.currentHomeScore;
         if (this.hor.awayScore) this.hor.awayScore.innerText = this.currentAwayScore;
-
-        if (this.ver.homeScore) this.ver.homeScore.innerText = this.currentHomeScore;
-        if (this.ver.awayScore) this.ver.awayScore.innerText = this.currentAwayScore;
     }
 
     startPolling() {
@@ -562,8 +516,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const urlParams = new URLSearchParams(window.location.search);
     const idFromUrl = urlParams.get('id');
 
+    const typeFromUrl = urlParams.get('tipo');
+    const templateType = typeFromUrl === '2' ? 2 : 1;
+
     const displayManager = new MatchDisplayManager({
-        fixtureId: idFromUrl ? parseInt(idFromUrl) : 9 // Usa el ID de la URL, o 9 por defecto
+        fixtureId: idFromUrl ? parseInt(idFromUrl) : 9, // Usa el ID de la URL, o 9 por defecto
+        templateType
     });
     
     displayManager.fetchInitialData();
